@@ -1,0 +1,93 @@
+
+I-ENDIANESS-01.riscv:     file format elf32-littleriscv
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text.init    00000050  00000200  00000200  00000200  2**4
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000008  00000250  00000250  00000250  2**4
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .io_buf       00000020  00006000  00006000  00001000  2**4
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  3 .riscv.attributes 00000031  00000000  00000000  00001020  2**0
+                  CONTENTS, READONLY
+
+Disassembly of section .text.init:
+
+00000200 <_start>:
+ 200:	25400813          	li	a6,596
+ 204:	00006897          	auipc	a7,0x6
+ 208:	dfc88893          	addi	a7,a7,-516 # 6000 <codasip_signature_start>
+ 20c:	00082083          	lw	ra,0(a6)
+ 210:	00085103          	lhu	sp,0(a6)
+ 214:	00285183          	lhu	gp,2(a6)
+ 218:	fff84203          	lbu	tp,-1(a6)
+ 21c:	00084283          	lbu	t0,0(a6)
+ 220:	00184303          	lbu	t1,1(a6)
+ 224:	00284383          	lbu	t2,2(a6)
+ 228:	00384403          	lbu	s0,3(a6)
+ 22c:	0018a023          	sw	ra,0(a7)
+ 230:	0028a223          	sw	sp,4(a7)
+ 234:	0038a423          	sw	gp,8(a7)
+ 238:	0048a623          	sw	tp,12(a7)
+ 23c:	0058a823          	sw	t0,16(a7)
+ 240:	0068aa23          	sw	t1,20(a7)
+ 244:	0078ac23          	sw	t2,24(a7)
+ 248:	0088ae23          	sw	s0,28(a7)
+
+0000024c <halt>:
+ 24c:	0000006f          	j	24c <halt>
+
+Disassembly of section .data:
+
+00000250 <test_A_data-0x4>:
+ 250:	89abcdef          	jal	s11,fffbc2ea <_end+0xfffb62ca>
+
+00000254 <test_A_data>:
+ 254:	01234567          	.insn	4, 0x01234567
+
+Disassembly of section .io_buf:
+
+00006000 <codasip_signature_start>:
+    6000:	ffff                	.insn	2, 0xffff
+    6002:	ffff                	.insn	2, 0xffff
+    6004:	ffff                	.insn	2, 0xffff
+    6006:	ffff                	.insn	2, 0xffff
+    6008:	ffff                	.insn	2, 0xffff
+    600a:	ffff                	.insn	2, 0xffff
+    600c:	ffff                	.insn	2, 0xffff
+    600e:	ffff                	.insn	2, 0xffff
+    6010:	ffff                	.insn	2, 0xffff
+    6012:	ffff                	.insn	2, 0xffff
+    6014:	ffff                	.insn	2, 0xffff
+    6016:	ffff                	.insn	2, 0xffff
+    6018:	ffff                	.insn	2, 0xffff
+    601a:	ffff                	.insn	2, 0xffff
+    601c:	ffff                	.insn	2, 0xffff
+    601e:	ffff                	.insn	2, 0xffff
+
+Disassembly of section .riscv.attributes:
+
+00000000 <.riscv.attributes>:
+   0:	3041                	.insn	2, 0x3041
+   2:	0000                	.insn	2, 0x0000
+   4:	7200                	.insn	2, 0x7200
+   6:	7369                	.insn	2, 0x7369
+   8:	01007663          	bgeu	zero,a6,14 <_start-0x1ec>
+   c:	0026                	.insn	2, 0x0026
+   e:	0000                	.insn	2, 0x0000
+  10:	7205                	.insn	2, 0x7205
+  12:	3376                	.insn	2, 0x3376
+  14:	6932                	.insn	2, 0x6932
+  16:	7032                	.insn	2, 0x7032
+  18:	5f31                	.insn	2, 0x5f31
+  1a:	326d                	.insn	2, 0x326d
+  1c:	3070                	.insn	2, 0x3070
+  1e:	7a5f 6369 7273      	.insn	6, 0x727363697a5f
+  24:	7032                	.insn	2, 0x7032
+  26:	5f30                	.insn	2, 0x5f30
+  28:	6d7a                	.insn	2, 0x6d7a
+  2a:	756d                	.insn	2, 0x756d
+  2c:	316c                	.insn	2, 0x316c
+  2e:	3070                	.insn	2, 0x3070
+  30:	00                	.byte	0x00

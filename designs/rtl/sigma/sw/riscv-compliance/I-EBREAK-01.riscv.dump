@@ -1,0 +1,80 @@
+
+I-EBREAK-01.riscv:     file format elf32-littleriscv
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text.init    00000054  00000200  00000200  00000200  2**4
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .io_buf       00000010  00006000  00006000  00001000  2**4
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  2 .riscv.attributes 00000035  00000000  00000000  00001010  2**0
+                  CONTENTS, READONLY
+
+Disassembly of section .text.init:
+
+00000200 <_start>:
+ 200:	00000097          	auipc	ra,0x0
+ 204:	02c08093          	addi	ra,ra,44 # 22c <_trap_handler>
+ 208:	30509ff3          	csrrw	t6,mtvec,ra
+ 20c:	00006097          	auipc	ra,0x6
+ 210:	df408093          	addi	ra,ra,-524 # 6000 <codasip_signature_start>
+ 214:	11111137          	lui	sp,0x11111
+ 218:	11110113          	addi	sp,sp,273 # 11111111 <_end+0x1110b101>
+ 21c:	00100073          	ebreak
+ 220:	0000a023          	sw	zero,0(ra)
+ 224:	305f9073          	csrw	mtvec,t6
+ 228:	0280006f          	j	250 <halt>
+
+0000022c <_trap_handler>:
+ 22c:	34102f73          	csrr	t5,mepc
+ 230:	004f0f13          	addi	t5,t5,4
+ 234:	341f1073          	csrw	mepc,t5
+ 238:	34202f73          	csrr	t5,mcause
+ 23c:	01e0a023          	sw	t5,0(ra)
+ 240:	0020a223          	sw	sp,4(ra)
+ 244:	0000a423          	sw	zero,8(ra)
+ 248:	00c08093          	addi	ra,ra,12
+ 24c:	30200073          	mret
+
+00000250 <halt>:
+ 250:	0000006f          	j	250 <halt>
+
+Disassembly of section .io_buf:
+
+00006000 <codasip_signature_start>:
+    6000:	ffff                	.insn	2, 0xffff
+    6002:	ffff                	.insn	2, 0xffff
+    6004:	ffff                	.insn	2, 0xffff
+    6006:	ffff                	.insn	2, 0xffff
+    6008:	ffff                	.insn	2, 0xffff
+    600a:	ffff                	.insn	2, 0xffff
+    600c:	ffff                	.insn	2, 0xffff
+    600e:	ffff                	.insn	2, 0xffff
+
+Disassembly of section .riscv.attributes:
+
+00000000 <.riscv.attributes>:
+   0:	3441                	.insn	2, 0x3441
+   2:	0000                	.insn	2, 0x0000
+   4:	7200                	.insn	2, 0x7200
+   6:	7369                	.insn	2, 0x7369
+   8:	01007663          	bgeu	zero,a6,14 <_start-0x1ec>
+   c:	002a                	.insn	2, 0x002a
+   e:	0000                	.insn	2, 0x0000
+  10:	7205                	.insn	2, 0x7205
+  12:	3376                	.insn	2, 0x3376
+  14:	6932                	.insn	2, 0x6932
+  16:	7032                	.insn	2, 0x7032
+  18:	5f31                	.insn	2, 0x5f31
+  1a:	326d                	.insn	2, 0x326d
+  1c:	3070                	.insn	2, 0x3070
+  1e:	7a5f 6369 7273      	.insn	6, 0x727363697a5f
+  24:	7032                	.insn	2, 0x7032
+  26:	5f30                	.insn	2, 0x5f30
+  28:	6d7a                	.insn	2, 0x6d7a
+  2a:	756d                	.insn	2, 0x756d
+  2c:	316c                	.insn	2, 0x316c
+  2e:	3070                	.insn	2, 0x3070
+  30:	0800                	.insn	2, 0x0800
+  32:	0a01                	.insn	2, 0x0a01
+  34:	0b                	.byte	0x0b

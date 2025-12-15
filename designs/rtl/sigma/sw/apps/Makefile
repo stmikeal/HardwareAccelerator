@@ -15,17 +15,18 @@ src_dir = .
 #--------------------------------------------------------------------
 
 bmarks = \
-	heartbeat_variable \
-	md5 \
-	timer_test \
-	mul_sw \
-	irq_counter \
-	median \
-	qsort \
-	rsort \
-	crc32 \
-	bootloader \
-	dhrystone \
+	kmean \
+	#heartbeat_variable \
+	#md5 \
+	#timer_test \
+	#mul_sw \
+	#irq_counter \
+	#median \
+	#qsort \
+	#rsort \
+	#crc32 \
+	#bootloader \
+	#dhrystone \
 	#towers \
 	#vvadd \
 	#multiply \
@@ -39,9 +40,9 @@ bmarks = \
 # Build rules
 #--------------------------------------------------------------------
 
-RISCV_PREFIX ?= riscv$(XLEN)-unknown-elf-
+RISCV_PREFIX ?= riscv$(XLEN)-unknown-linux-gnu-
 RISCV_GCC ?= $(RISCV_PREFIX)gcc
-RISCV_GCC_OPTS ?= -mcmodel=medany -static -std=gnu99 -O2 -march=rv32im -mabi=ilp32
+RISCV_GCC_OPTS ?= -lm -mcmodel=medany -static -std=gnu99 -O2 -march=rv32im_zicsr -mabi=ilp32 -Wno-error -Wno-pedantic
 RISCV_LINK ?= $(RISCV_GCC) -T $(src_dir)/../common/sigma.ld $(incs)
 RISCV_LINK_OPTS ?= -static -nostartfiles -lgcc -T $(src_dir)/../common/sigma.ld
 RISCV_LINK_OPTS_TESTAPP ?= -static -nostartfiles -lgcc -T $(src_dir)/bootloader_testapp/bootloader_testapp.ld

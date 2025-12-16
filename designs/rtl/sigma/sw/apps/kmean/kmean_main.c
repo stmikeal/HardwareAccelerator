@@ -4,9 +4,18 @@
 #include "example.h"
 #include "io.h"
 
+#define IO_X (*(volatile unsigned int *)(0x80000010))
+#define IO_Y (*(volatile unsigned int *)(0x80000014))
+#define IO_RES (*(volatile unsigned int *)(0x80000018))
+
 typedef struct {
-  int x;
-  int y;
+  union {
+    struct {
+      unsigned short x;
+      unsigned short y;
+    };
+    unsigned int val;
+  };
 } Coords;
 
 typedef struct {
@@ -30,7 +39,16 @@ typedef struct {
 unsigned int abs(int a) { return (unsigned int)((a > 0) ? a : -a); }
 
 unsigned int distance(Coords *a, Coords *b) {
-  return abs((int)(a->y - a->y)) + abs((int)(a->x - b->x));
+  /*
+  int dx = abs(a->x - b->x);
+  int dy = abs(a->y - b->y);
+  int maxd = MAX(dx, dy);
+  int mind = MIN(dx, dy);
+  return (int)(251 * maxd + 102 * mind) / 256;
+  */
+  IO_X = a->val;
+  IO_Y = b->val;
+  return IO_RES;
 }
 
 void kmean(Centroid *clusters, Point *points) {
@@ -52,7 +70,7 @@ void kmean(Centroid *clusters, Point *points) {
       }
     }
     for (int j = 0; j < CLUSTER_SIZE; j++) {
-      unsigned int size = 0, x = 0, y = 0;
+      unsigned int size = 1, x = clusters[j].coord.x, y = clusters[j].coord.y;
       for (int i = 0; i < POINT_SIZE; i++) {
         if (points[i].cluster == j) {
           size += 1;
@@ -60,13 +78,12 @@ void kmean(Centroid *clusters, Point *points) {
           y += points[i].coord.y;
         }
       }
-      if (size != 0) {
-        clusters[j].coord.x = x / size;
-        clusters[j].coord.y = y / size;
-      }
-      if (distance(&clusters[j].coord, &clusters[j].prev_coord) > 1) {
+      clusters[j].coord.x = x / size;
+      clusters[j].coord.y = y / size;
+    }
+    for (int j = 0; j < CLUSTER_SIZE; j++) {
+      if (distance(&clusters[j].coord, &clusters[j].prev_coord) > 1)
         changed = 1;
-      }
     }
   }
 }
@@ -85,11 +102,11 @@ int main(int argc, char *argv[]) {
   }
 
   for (int i = 0; i < CLUSTER_SIZE; i++) {
-    clusters[i].coord.x = points[i].coord.x;
-    clusters[i].coord.y = points[i].coord.y;
+    clusters[i].coord.x =
+        points[i * (POINT_SIZE / CLUSTER_SIZE - 1) + 1].coord.x;
+    clusters[i].coord.y =
+        points[i * (POINT_SIZE / CLUSTER_SIZE - 1) + 1].coord.y;
   }
-
-  // Create psedo-struct for arrays
 
   // Do alghorithm
   kmean(clusters, points);

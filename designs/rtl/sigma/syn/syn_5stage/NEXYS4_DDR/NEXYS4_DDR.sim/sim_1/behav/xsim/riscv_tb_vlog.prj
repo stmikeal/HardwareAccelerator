@@ -1,6 +1,7 @@
 # compile verilog/system verilog design source files
 verilog xil_defaultlib  --include "../../../../../../../../sigma_tile/hw" --include "../../../../../../../../sigma_tile/hw/riscv/coregen/riscv_5stage/sverilog" --include "../../../../../../../../sigma_tile/hw/riscv/coregen/riscv_1stage/sverilog" --include "../../../../../../../../sigma_tile/hw/riscv/coregen/riscv_6stage/sverilog" --include "../../../../../../../../sigma_tile/hw/riscv/coregen/riscv_2stage/sverilog" --include "../../../../../../../../sigma_tile/hw/riscv/coregen/riscv_3stage/sverilog" --include "../../../../../../../../sigma_tile/hw/riscv/coregen/riscv_4stage/sverilog" --include "../../../../../../../../udm/tb" --include "../../../../NEXYS4_DDR.srcs/sources_1/ip/sys_clk" \
 "../../../../../../../../debouncer/debouncer.v" \
+"../../../../NEXYS4_DDR.srcs/sources_1/new/distance.v" \
 "../../../../../../../../ram/ram_dual.v" \
 "../../../../../../../../ram/ram_dual_memsplit.v" \
 "../../../../../../../../reset_sync/reset_sync.v" \

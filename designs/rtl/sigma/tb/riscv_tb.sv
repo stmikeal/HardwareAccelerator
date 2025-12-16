@@ -13,8 +13,8 @@
 //`define CLK_HALF_PERIOD			7143					// external 70 MHZ
 //`define CLK_HALF_PERIOD			6250					// external 80 MHZ
 //`define CLK_HALF_PERIOD			3571					// external 140 MHZ
-//`define CLK_HALF_PERIOD			3333					// external 150 MHZ
-`define CLK_HALF_PERIOD			3125					// external 160 MHZ
+`define CLK_HALF_PERIOD			3333					// external 150 MHZ
+//`define CLK_HALF_PERIOD			3125					// external 160 MHZ
 
 `define DIVIDER_115200		32'd8680000
 `define DIVIDER_19200		32'd52083000
@@ -36,8 +36,8 @@ sigma
 	//.CPU("riscv_2stage")
 	//.CPU("riscv_3stage")
 	//.CPU("riscv_4stage")
-	//.CPU("riscv_5stage")
-	.CPU("riscv_6stage")
+	.CPU("riscv_5stage")
+	//.CPU("riscv_6stage")
 
 	, .UDM_RTX_EXTERNAL_OVERRIDE("YES")
 	, .DEBOUNCER_FACTOR_POW(2)

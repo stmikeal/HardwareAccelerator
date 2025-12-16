@@ -42,7 +42,7 @@ bmarks = \
 
 RISCV_PREFIX ?= riscv$(XLEN)-unknown-linux-gnu-
 RISCV_GCC ?= $(RISCV_PREFIX)gcc
-RISCV_GCC_OPTS ?= -lm -mcmodel=medany -static -std=gnu99 -O2 -march=rv32im_zicsr -mabi=ilp32 -Wno-error -Wno-pedantic
+RISCV_GCC_OPTS ?= -mcmodel=medany -static -std=gnu99 -O2 -march=rv32im_zicsr -mabi=ilp32 -Wno-error -Wno-pedantic
 RISCV_LINK ?= $(RISCV_GCC) -T $(src_dir)/../common/sigma.ld $(incs)
 RISCV_LINK_OPTS ?= -static -nostartfiles -lgcc -T $(src_dir)/../common/sigma.ld
 RISCV_LINK_OPTS_TESTAPP ?= -static -nostartfiles -lgcc -T $(src_dir)/bootloader_testapp/bootloader_testapp.ld

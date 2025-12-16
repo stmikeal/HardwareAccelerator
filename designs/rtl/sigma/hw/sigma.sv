@@ -98,6 +98,26 @@ udm #(
 
 localparam CSR_LED_ADDR         = 32'h80000000;
 localparam CSR_SW_ADDR          = 32'h80000004;
+localparam CSR_P1_ADDR           = 32'h80000010;
+localparam CSR_P2_ADDR           = 32'h80000014;
+localparam CSR_RES_ADDR           = 32'h80000018;
+
+logic [15:0] x1_reg;
+logic [15:0] x2_reg;
+logic [15:0] y1_reg;
+logic [15:0] y2_reg;
+logic [31:0] res;
+
+distance distance(
+    .clk_i(clk_i), 
+    .rst_i(srst),
+    .x1(x1_reg),
+    .x2(x2_reg),
+    .y1(y1_reg),
+    .y2(y2_reg),
+    .res(res)
+);
+
 
 logic [31:0] gpio_bo_reg;
 assign gpio_bo = gpio_bo_reg;
@@ -120,6 +140,16 @@ always @(posedge clk_i)
         if (xif.we)     // writing
             begin
             if (xif.addr == CSR_LED_ADDR) gpio_bo_reg <= xif.wdata;
+            if (xif.addr == CSR_P1_ADDR) 
+                begin 
+                    x1_reg <= xif.wdata[15:0];
+                    y1_reg <= xif.wdata[31:16];
+                end
+            if (xif.addr == CSR_P2_ADDR) 
+                begin 
+                    x2_reg <= xif.wdata[15:0];
+                    y2_reg <= xif.wdata[31:16];
+                end
             end
         
         else            // reading
@@ -133,6 +163,11 @@ always @(posedge clk_i)
                 begin
                 csr_resp <= 1'b1;
                 csr_rdata <= gpio_bi_reg;
+                end
+            if (xif.addr == CSR_RES_ADDR)
+                begin
+                csr_resp <= 1'b1;
+                csr_rdata <= res;
                 end
             end
         end

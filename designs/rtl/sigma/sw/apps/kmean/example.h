@@ -1,3 +1,4 @@
+#pragma once
 
 #define CLUSTER_SIZE 4
 #define POINT_SIZE 12

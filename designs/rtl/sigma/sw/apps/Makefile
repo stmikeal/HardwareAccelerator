@@ -51,28 +51,24 @@ RISCV_OBJDUMP ?= $(RISCV_PREFIX)objdump --disassemble-all --disassemble-zeroes -
 incs  += -I$(src_dir)/../env -I$(src_dir)/../common $(addprefix -I$(src_dir)/, $(bmarks))
 objs  :=
 
+bmarks_riscv_bin  = 
 define compile_template
-$(1).riscv: $(wildcard $(src_dir)/$(1)/*) $(wildcard $(src_dir)/../common/*)
-	$$(RISCV_GCC) $$(incs) $$(RISCV_GCC_OPTS) $$(RISCV_LINK_OPTS) -o $$@ $(wildcard $(src_dir)/$(1)/*.c) $(wildcard $(src_dir)/$(1)/*.S) $(wildcard $(src_dir)/../common/*.c) $(wildcard $(src_dir)/../common/*.S)
-	hexdump -ve '/4 "%08x" "\n"' $(1).riscv > $(1).riscv.hex
-endef
-
-define compile_template_testapp
-$(1).riscv: $(wildcard $(src_dir)/$(1)/*) $(wildcard $(src_dir)/../common/*)
-	$$(RISCV_GCC) $$(incs) $$(RISCV_GCC_OPTS) $$(RISCV_LINK_OPTS_TESTAPP) -o $$@ $(wildcard $(src_dir)/$(1)/*.c) $(wildcard $(src_dir)/$(1)/*.S) $(wildcard $(src_dir)/../common/*.c) $(wildcard $(src_dir)/../common/*.S)
-	hexdump -ve '/4 "%08x" "\n"' $(1).riscv > $(1).riscv.hex
+$(foreach type, 0 1 2 3, 
+bmarks_riscv_bin += $(1)$(type)
+$(1)$(type).riscv: $(wildcard $(src_dir)/$(1)/*) $(wildcard $(src_dir)/../common/*)
+	$$(RISCV_GCC) $$(incs) $$(RISCV_GCC_OPTS) $$(RISCV_LINK_OPTS) -DTEST_TYPE=$(type) -o $$@ $(wildcard $(src_dir)/$(1)/*.c) $(wildcard $(src_dir)/$(1)/*.S) $(wildcard $(src_dir)/../common/*.c) $(wildcard $(src_dir)/../common/*.S)
+	hexdump -ve '/4 "%08x" "\n"' $(1)$(type).riscv > $(1)$(type).riscv.hex
+)
 endef
 
 $(foreach bmark,$(bmarks),$(eval $(call compile_template,$(bmark))))
-$(eval $(call compile_template_testapp,bootloader_testapp))
 
 #------------------------------------------------------------
 # Build and run benchmarks on riscv simulator
 
-bmarks_riscv_bin  = $(addsuffix .riscv,      $(bmarks) bootloader_testapp)
-bmarks_riscv_dump = $(addsuffix .riscv.dump, $(bmarks) bootloader_testapp)
-bmarks_riscv_out  = $(addsuffix .riscv.out,  $(bmarks) bootloader_testapp)
-bmarks_riscv_hex  = $(addsuffix .riscv.hex,  $(bmarks) bootloader_testapp)
+bmarks_riscv_dump = $(addsuffix .riscv.dump, $(bmarks_riscv_bin))
+bmarks_riscv_out  = $(addsuffix .riscv.out,  $(bmarks_riscv_bin))
+bmarks_riscv_hex  = $(addsuffix .riscv.hex,  $(bmarks_riscv_bin))
 
 $(bmarks_riscv_dump): %.riscv.dump: %.riscv
 	$(RISCV_OBJDUMP) $< > $@
@@ -94,4 +90,4 @@ all: riscv
 # Clean up
 
 clean:
-	rm -rf $(objs) $(junk)
+	rm -rf $(objs) $(junk) *.riscv*
